@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// POST /api/users
+// POST /api/users creates
 router.post('/', (req, res) => {
     // expects {username:, email, password}
     User.create({
@@ -47,6 +47,30 @@ router.post('/', (req, res) => {
     .catch(err => {
         console.log(err);
         res.status(500).json(err);
+    });
+});
+
+// validates log in credentials
+router.post('/login', (req, res) => {
+    // expects {email, password}
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+    .then(dbUserData => {
+        if (!dbUserData) {
+            res.status(400).json({ message: 'Invalid email or password!' });
+            return;
+        }
+        // res.json({ user: dbUserData });
+        // verify user
+        const validPassword = dbUserData.checkPassword(req.body.password);
+        if (!validPassword) {
+            res.status(400).json({ message: 'Incorrect password!' });
+            return;
+        }
+        res.json({ user: dbUserData, message: 'You are now logged in!' });
     });
 });
 
