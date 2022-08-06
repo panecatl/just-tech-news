@@ -1,5 +1,10 @@
 const router = require('express').Router();
+<<<<<<< HEAD
 const { User, Post, Comment, Vote } = require('../../models');
+=======
+const withAuth = require('../../utils/auth');
+const { User, Post, Vote, Comment } = require('../../models');
+>>>>>>> develop
 
 // GET /api/users
 router.get('/', (req, res) => {
@@ -57,7 +62,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/users creates
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
     // expects {username:, email, password}
     User.create({
         username: req.body.username,
@@ -124,7 +129,7 @@ router.post('/logout', (req, res) => {
 });
 
 // PUT /api/users/1
-router.put('/:id', (req, res) => {
+router.put('/:id', withAuth, (req, res) => {
     // expects {username, email, password}
     // if req.body has exact key/value pairs to match the model, you can just use 'req.body' instead
     // .update() used to create and look up data
